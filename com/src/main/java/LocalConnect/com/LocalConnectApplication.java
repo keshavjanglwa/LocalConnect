@@ -8,7 +8,7 @@ public class LocalConnectApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LocalConnectApplication.class, args);
-		System.out.println("LocalConnectApplication is running...");
+		
 	}
 
 }

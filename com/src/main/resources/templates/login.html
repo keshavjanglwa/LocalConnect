@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Locality Connect</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="auth-card">
+    <h1>Locality Connect</h1>
+    <p style="text-align:center; color:#6b6b6b;">Find local activity partners &amp; community groups</p>
+
+    <div class="alert alert-error" th:if="${param.error}">
+        Invalid email or password.
+    </div>
+    <div class="alert alert-success" th:if="${param.registered}">
+        Account created! Please log in.
+    </div>
+    <div class="alert alert-success" th:if="${param.logout}">
+        You have been logged out.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autofocus>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn" style="width:100%;">Log In</button>
+    </form>
+
+    <p style="text-align:center; margin-top:16px;">
+        New here? <a th:href="@{/register}">Create an account</a>
+    </p>
+</div>
+</body>
+</html>
