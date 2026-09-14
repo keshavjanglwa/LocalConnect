@@ -25,6 +25,7 @@ public class ActivityReply {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    
     private String message;
     private String status = "PENDING";
     private LocalDateTime createdAt = LocalDateTime.now();

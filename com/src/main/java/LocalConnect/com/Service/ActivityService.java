@@ -15,6 +15,7 @@ import LocalConnect.com.Entity.ActivityReply;
 import LocalConnect.com.Entity.User;
 import LocalConnect.com.Repository.ActivityPostRepository;
 import LocalConnect.com.Repository.ActivityReplyRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ActivityService {
@@ -30,7 +31,7 @@ public class ActivityService {
         post.setStatus("OPEN");
         return activityPostRepository.save(post);
     }
-    
+     
     public List<ActivityPost> getFeedForLocality(String locality) {
         return activityPostRepository.findByLocalityOrderByCreatedAtDesc(locality);
     }
@@ -42,6 +43,30 @@ public class ActivityService {
 
     public List<ActivityReply> getRepliesForPost(Long postId) {
         return activityReplyRepository.findByActivityPostIdOrderByCreatedAtAsc(postId);
+    }
+
+    public void assertOwner(ActivityPost post, Long currentUserId) {
+        if (!post.getUser().getId().equals(currentUserId)) {
+            throw new SecurityException("You are not allowed to modify this post");
+        }
+    }
+
+    public void deleteRepliesForPost(Long postId) {
+        activityReplyRepository.deleteByActivityPostId(postId);
+    }
+
+    public ActivityPost updateStatus(Long postId, String status, Long currentUserId) {
+        ActivityPost post = getByIdOrThrow(postId);
+        assertOwner(post, currentUserId);
+        post.setStatus(status);
+        return activityPostRepository.save(post);
+    }
+    @Transactional
+    public void deletePost(Long postId, Long currentUserId) {
+        ActivityPost post = getByIdOrThrow(postId);
+        assertOwner(post, currentUserId);
+        deleteRepliesForPost(postId);
+        activityPostRepository.delete(post);
     }
     
     public ActivityReply addReply(Long postId, User replier, String message) {
@@ -56,6 +81,34 @@ public class ActivityService {
         ActivityReply saved = activityReplyRepository.save(reply);
         return saved;
     }
+    public void acceptReply(Long postId, Long replyId, Long currentUserId) {
+        ActivityPost post = getByIdOrThrow(postId);
+        assertOwner(post, currentUserId);
+
+        ActivityReply reply = activityReplyRepository.findById(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("Reply not found"));
+
+        reply.setStatus("ACCEPTED");
+        activityReplyRepository.save(reply);
+        
+        long acceptedCount = activityReplyRepository.findByActivityPostIdOrderByCreatedAtAsc(postId)
+                .stream().filter(r -> "ACCEPTED".equals(r.getStatus())).count();
+
+        if (acceptedCount >= post.getPartnerCount()) {
+            post.setStatus("FULL");
+            activityPostRepository.save(post);
+        }
+    }
+
+    public void rejectReply(Long postId, Long replyId, Long currentUserId) {
+        ActivityPost post = getByIdOrThrow(postId);
+        assertOwner(post, currentUserId);
+
+        ActivityReply reply = activityReplyRepository.findById(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("Reply not found"));
+        reply.setStatus("REJECTED");
+        activityReplyRepository.save(reply);
+    }   
     
     public List<ActivityPost> searchByActivityName(String locality, String activityName) {
         if (activityName == null || activityName.isBlank()) {

@@ -26,29 +26,17 @@ public class ActivityController {
     private ActivityService activityService;
     @Autowired
     private UserService userService;
-     
+    
+    private User currentUser(UserDetails principal) {
+        return userService.getByEmailOrThrow(principal.getUsername());
+    }
+
     @GetMapping("/new")
     public String newForm(Model model) {
         ActivityPost activityPost = new ActivityPost() {};
         model.addAttribute("activityPost", activityPost);
         return "activity-form"; 
     }
-
-    @PostMapping
-    public String create(@AuthenticationPrincipal UserDetails principal,
-                        @ModelAttribute("activityPost") ActivityPost activityPost,
-                          BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "activity-form";
-        }
-        User user = currentUser(principal);
-        activityService.createPost(activityPost, user);
-        return "redirect:/activities";
-    }
-
-    private User currentUser(UserDetails principal) {
-        return userService.getByEmailOrThrow(principal.getUsername());
-    } 
 
     @GetMapping()
     public String list(@AuthenticationPrincipal UserDetails principal,
@@ -61,7 +49,7 @@ public class ActivityController {
         model.addAttribute("activityName", activityName);
         return "activity-list";
     }
-        
+
     @GetMapping("/{id}")
     public String details(@AuthenticationPrincipal UserDetails principal,
                            @PathVariable Long id, Model model) {
@@ -75,6 +63,18 @@ public class ActivityController {
         model.addAttribute("isOwner", post.getUser().getId().equals(user.getId()));
         return "activity-details";
     }
+
+    @PostMapping
+    public String create(@AuthenticationPrincipal UserDetails principal,
+                        @ModelAttribute("activityPost") ActivityPost activityPost,
+                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "activity-form";
+        }
+        User user = currentUser(principal);
+        activityService.createPost(activityPost, user);
+        return "redirect:/activities";
+    } 
     
     @PostMapping("/{id}/reply")
     public String reply(@AuthenticationPrincipal UserDetails principal,
@@ -83,5 +83,36 @@ public class ActivityController {
         User user = currentUser(principal);
         activityService.addReply(id, user, message);
         return "redirect:/activities/" + id;
+    }
+        
+    @PostMapping("/{id}/replies/{replyId}/accept")
+    public String acceptReply(@AuthenticationPrincipal UserDetails principal,
+                               @PathVariable Long id, @PathVariable Long replyId) {
+        User user = currentUser(principal);
+        activityService.acceptReply(id, replyId, user.getId());
+        return "redirect:/activities/" + id;
+    }
+
+    @PostMapping("/{id}/replies/{replyId}/reject")
+    public String rejectReply(@AuthenticationPrincipal UserDetails principal,
+                               @PathVariable Long id, @PathVariable Long replyId) {
+        User user = currentUser(principal);
+        activityService.rejectReply(id, replyId, user.getId());
+        return "redirect:/activities/" + id;
+    }
+
+    @PostMapping("/{id}/status")
+    public String updateStatus(@AuthenticationPrincipal UserDetails principal,
+                                @PathVariable Long id, @RequestParam String status) {
+        User user = currentUser(principal);
+        activityService.updateStatus(id, status, user.getId());
+        return "redirect:/activities/" + id;
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@AuthenticationPrincipal UserDetails principal, @PathVariable Long id) {
+        User user = currentUser(principal);
+        activityService.deletePost(id, user.getId());
+        return "redirect:/activities";
     }
 } 

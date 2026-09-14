@@ -7,7 +7,6 @@
     <script th:src="@{/js/main.js}" defer></script>
 </head>
 <body>
-<!-- <div th:replace="~{fragments/navbar :: navbar}"></div> -->
 
 <div class="container">
     <div class="card">
@@ -69,6 +68,14 @@
                 <span class="badge" th:classappend="'status-' + ${reply.status}" th:text="${reply.status}">PENDING</span>
             </div>
             <p th:text="${reply.message}" style="margin:6px 0;">Reply message</p>
+            <div th:if="${isOwner and reply.status == 'PENDING'}">
+                <form class="inline-form" th:action="@{'/activities/' + ${post.id} + '/replies/' + ${reply.id} + '/accept'}" method="post">
+                    <button type="submit" class="btn btn-small">Accept</button>
+                </form>
+                <form class="inline-form" th:action="@{'/activities/' + ${post.id} + '/replies/' + ${reply.id} + '/reject'}" method="post">
+                    <button type="submit" class="btn btn-small btn-secondary">Reject</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
