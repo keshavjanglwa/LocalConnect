@@ -1,0 +1,269 @@
+:root {
+  --primary: #2f6f4e;
+  --primary-dark: #23543b;
+  --bg: #f5f6f2;
+  --card-bg: #ffffff;
+  --text: #262626;
+  --muted: #6b6b6b;
+  --border: #e0e0dc;
+  --danger: #b3413a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  background-color: var(--primary-dark);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  flex-wrap: wrap;
+}
+
+.navbar .brand {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.navbar .nav-links a {
+  color: #e8f0ea;
+  margin-right: 16px;
+  font-size: 14px;
+}
+
+.navbar .nav-links a:hover {
+  color: white;
+}
+
+.navbar .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar form {
+  margin: 0;
+}
+
+/* ===== Layout ===== */
+.container {
+  max-width: 800px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.page-header h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+/* ===== Cards ===== */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.card h3 {
+  margin: 0 0 6px 0;
+  font-size: 17px;
+}
+
+.card .meta {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background-color: var(--primary);
+}
+
+.badge.status-OPEN { background-color: #2f6f4e; }
+.badge.status-FULL { background-color: #b98a1f; }
+.badge.status-COMPLETED { background-color: #556; }
+.badge.status-CANCELLED { background-color: var(--danger); }
+.badge.status-PENDING { background-color: #b98a1f; }
+.badge.status-APPROVED { background-color: #2f6f4e; }
+.badge.status-REJECTED { background-color: var(--danger); }
+.badge.status-ACCEPTED { background-color: #2f6f4e; }
+
+/* ===== Forms ===== */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.alert {
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.alert-error {
+  background-color: #fbe6e4;
+  color: var(--danger);
+  border: 1px solid #f0bdb8;
+}
+
+.alert-success {
+  background-color: #e5f3ea;
+  color: var(--primary-dark);
+  border: 1px solid #bfe0cc;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-block;
+  padding: 9px 16px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: var(--primary);
+  color: white;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: var(--primary-dark);
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background-color: #dcdcd6;
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  background-color: #c8c8c1;
+}
+
+.btn-danger {
+  background-color: var(--danger);
+}
+
+.btn-small {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.inline-form {
+  display: inline;
+}
+
+.reply {
+  border-top: 1px solid var(--border);
+  padding: 10px 0;
+}
+
+.reply:first-child {
+  border-top: none;
+}
+
+.empty-state {
+  color: var(--muted);
+  font-style: italic;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.auth-card {
+  max-width: 420px;
+  margin: 60px auto;
+  background: var(--card-bg);
+  padding: 28px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.auth-card h1 {
+  text-align: center;
+  color: var(--primary-dark);
+}
+
+.filters {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}

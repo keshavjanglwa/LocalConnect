@@ -1,0 +1,43 @@
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Find Partners - Locality Connect</title>
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </head>
+    <body>
+    <!-- <div th:replace="~{fragments/navbar :: navbar}"></div> -->
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Find Partners</h1>
+            <a th:href="@{/activities/new}" class="btn">+ New Activity Post</a>
+        </div>
+
+        <form class="filters" th:action="@{/activities}" method="get">
+            <input type="text" name="activityName" placeholder="Search e.g. Pickleball, Cricket..."
+                th:value="${activityName}" style="flex:1; padding:8px; border:1px solid #e0e0dc; border-radius:6px;">
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </form>
+
+        <div th:if="${#lists.isEmpty(posts)}" class="empty-state">
+            No matching activity posts found in your locality.
+        </div>
+
+        <div class="card" th:each="post : ${posts}">
+            <div style="display:flex; justify-content:space-between; align-items:start;">
+                <h3><a th:href="@{'/activities/' + ${post.id}}" th:text="${post.activityName}">Activity</a></h3>
+                <span class="badge" th:classappend="'status-' + ${post.status}" th:text="${post.status}">OPEN</span>
+            </div>
+            <div class="meta">
+                By <span th:text="${post.user.name}">Someone</span> ·
+                <span th:text="${#temporals.format(post.activityTime, 'dd MMM, hh:mm a')}">time</span> ·
+                Looking for <span th:text="${post.partnerCount}">1</span> partner(s)
+                <span th:if="${post.location}"> · 📍 <span th:text="${post.location}">location</span></span>
+            </div>
+            <p th:text="${post.message}">Message text</p>
+            <a th:href="@{'/activities/' + ${post.id}}" class="btn btn-small btn-secondary">View &amp; Reply</a>
+        </div>
+    </div>
+    </body>
+    </html>

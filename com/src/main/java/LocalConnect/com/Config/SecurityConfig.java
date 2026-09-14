@@ -19,22 +19,29 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/","/home/**", "/login", "/register").permitAll()
-                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/user/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                                .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .usernameParameter("email")
-                        .passwordParameter("password")
-                        .defaultSuccessUrl("/home/home-page")
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll())
-                .httpBasic(org.springframework.security.config.Customizer.withDefaults());
+        http
+            .authorizeHttpRequests(auth -> auth
+                // Public pages
+                .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                // Admin-only pages
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                // Everything else requires login
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/home", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .permitAll()
+            );
         return http.build();
     }
 }

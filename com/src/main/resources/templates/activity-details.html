@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.activityName} + ' - Locality Connect'">Activity</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/main.js}" defer></script>
+</head>
+<body>
+<!-- <div th:replace="~{fragments/navbar :: navbar}"></div> -->
+
+<div class="container">
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:start;">
+            <h1 th:text="${post.activityName}" style="margin:0;">Activity</h1>
+            <span class="badge" th:classappend="'status-' + ${post.status}" th:text="${post.status}">OPEN</span>
+        </div>
+        <div class="meta">
+            Posted by <span th:text="${post.user.name}">Someone</span> ·
+            <span th:text="${#temporals.format(post.activityTime, 'dd MMM, hh:mm a')}">time</span> ·
+            Looking for <span th:text="${post.partnerCount}">1</span> partner(s)
+            <span th:if="${post.location}"> · 📍 <span th:text="${post.location}">location</span></span>
+        </div>
+        <p th:text="${post.message}">Message</p>
+
+        <div th:if="${isOwner}" style="margin-top:10px;">
+            <form class="inline-form" th:action="@{'/activities/' + ${post.id} + '/status'}" method="post">
+                <input type="hidden" name="status" value="COMPLETED">
+                <button type="submit" class="btn btn-small btn-secondary">Mark Completed</button>
+            </form>
+            <form class="inline-form" th:action="@{'/activities/' + ${post.id} + '/status'}" method="post">
+                <input type="hidden" name="status" value="CANCELLED">
+                <button type="submit" class="btn btn-small btn-secondary">Cancel Post</button>
+            </form>
+            <form class="inline-form confirm-delete" th:action="@{'/activities/' + ${post.id} + '/delete'}" method="post">
+                <button type="submit" class="btn btn-small btn-danger">Delete Post</button>
+            </form>
+        </div>
+
+        <div th:unless="${isOwner}" style="margin-top:10px;">
+            <form th:action="@{/reports}" method="post">
+                <input type="hidden" name="targetType" value="ACTIVITY_POST">
+                <input type="hidden" name="targetId" th:value="${post.id}">
+                <input type="hidden" name="redirectTo" th:value="'/activities/' + ${post.id}">
+                <input type="hidden" name="reason" value="Reported from activity details page">
+                <button type="submit" class="btn btn-small btn-secondary">Report</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>Replies</h2>
+
+    <div th:if="${post.status == 'OPEN'}" class="card">
+        <form th:action="@{'/activities/' + ${post.id} + '/reply'}" method="post">
+            <div class="form-group">
+                <label for="message">Write a reply</label>
+                <textarea id="message" name="message" placeholder="e.g. I am interested!" required></textarea>
+            </div>
+            <button type="submit" class="btn">Send Reply</button>
+        </form>
+    </div>
+
+    <div th:if="${#lists.isEmpty(replies)}" class="empty-state">No replies yet.</div>
+
+    <div class="card" th:each="reply : ${replies}">
+        <div class="reply">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong th:text="${reply.user.name}">Replier</strong>
+                <span class="badge" th:classappend="'status-' + ${reply.status}" th:text="${reply.status}">PENDING</span>
+            </div>
+            <p th:text="${reply.message}" style="margin:6px 0;">Reply message</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -45,4 +45,9 @@ public class UserService implements UserDetailsService{
         user.setLocality(locality);
         return userRepository.save(user);
     }
+
+    public User getByEmailOrThrow(String username) {
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No account found for " + username));
+    }
 }
