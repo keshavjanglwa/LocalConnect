@@ -32,6 +32,6 @@ public class ProfileController {
                                  @RequestParam String locality) {
         User user = currentUser(principal);
         userService.updateProfile(user.getId(), name, locality);
-        return "redirect:/profile";
+        return "redirect:/home";
     }
 }

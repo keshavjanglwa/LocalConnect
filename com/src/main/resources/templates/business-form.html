@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Business - Locality Connect</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <h1>Add a New Business / Service</h1>
+
+    <form th:action="@{/business}" th:object="${businessPost}" method="post">
+        <div class="form-group">
+            <label for="businessName">Business Name</label>
+            <input type="text" id="businessName" th:field="*{businessName}" required>
+            <div class="error-text" th:if="${#fields.hasErrors('businessName')}" th:errors="*{businessName}"></div>
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" th:field="*{category}" required>
+                <option value="">Select a category</option>
+                <option value="Shop">Shop</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Gym">Gym</option>
+                <option value="Cafe">Cafe</option>
+                <option value="Coaching">Coaching</option> 
+                <option value="Service">Service</option>
+                <option value="Salon">Salon</option>
+            </select>
+            <div class="error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+        </div>
+        <div class="form-group">
+            <label for="locality">Locality</label>
+            <input type="text" id="locality" th:field="*{locality}" placeholder="Leave blank to use your own locality">
+        </div>
+        <div class="form-group">
+            <label for="address">Address / Area</label>
+            <input type="text" id="address" th:field="*{address}">
+        </div>
+        <div class="form-group">
+            <label for="openingDate">Opening Date (optional)</label>
+            <input type="text" id="openingDate" th:field="*{openingDate}" placeholder="e.g. 12 September 2026">
+        </div>
+        <div class="form-group">
+            <label for="description">Short Description</label>
+            <textarea id="description" th:field="*{description}"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="contact">Phone / Contact (optional)</label>
+            <input type="text" id="contact" th:field="*{contact}">
+        </div>
+
+        <button type="submit" class="btn">Add Business</button>
+        <a th:href="@{/business}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
