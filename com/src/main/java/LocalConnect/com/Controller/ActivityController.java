@@ -115,4 +115,4 @@ public class ActivityController {
         activityService.deletePost(id, user.getId());
         return "redirect:/activities";
     }
-} 
+}  

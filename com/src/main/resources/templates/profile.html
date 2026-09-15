@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - Locality Connect</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <h1>My Profile</h1>
+
+    <div class="card">
+        <form th:action="@{/profile}" method="post">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" th:value="${currentUser.name}" required>
+            </div>
+            <div class="form-group">
+                <label>Email (cannot be changed)</label>
+                <input type="email" th:value="${currentUser.email}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="locality">Locality</label>
+                <input type="text" id="locality" name="locality" th:value="${currentUser.locality}" required>
+            </div>
+            <button type="submit" class="btn">Save Changes</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

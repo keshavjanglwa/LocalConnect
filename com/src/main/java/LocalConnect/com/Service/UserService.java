@@ -22,7 +22,7 @@ public class UserService implements UserDetailsService{
    @Autowired
     private PasswordEncoder passwordEncoder;
     
-        @Override
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("No account found for " + email));
@@ -49,5 +49,13 @@ public class UserService implements UserDetailsService{
     public User getByEmailOrThrow(String username) {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("No account found for " + username));
+    }
+
+    public User updateProfile(Long userId, String name, String locality) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setName(name);
+        user.setLocality(locality);
+        return userRepository.save(user);
     }
 }
